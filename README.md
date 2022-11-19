@@ -271,7 +271,7 @@ prettirer 是一款强大的代码格式化工具，支持js、ts、css、scss�
     npm i @commitlint/cli @commitlint/config-conventional -D
     ```
 
-  - 在根目录创建commit.config.js文件，配置commitlint
+  - 在根目录创建commitlint.config.js文件，配置commitlint
 
     ```js
     module.exports = {
@@ -288,4 +288,8 @@ prettirer 是一款强大的代码格式化工具，支持js、ts、css、scss�
 
     ![image-20221119165539090](./public/readIma/image-20221119165539090.png)
 
-​			
+  - 这个时候提交的话就会报错了
+
+    ![image-20221119170013560](C:\Users\hyq\AppData\Roaming\Typora\typora-user-images\image-20221119170013560.png)
+
+  - 
