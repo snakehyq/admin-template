@@ -232,21 +232,21 @@ npm install husky -D
 
 1.安装husky相关的依赖：
 
-![image-20221118204119448](C:\Users\hyq\AppData\Roaming\Typora\typora-user-images\image-20221118204119448.png)
+![image-20221118204119448](.\readIma\image-20221118204119448.png)
 
 2.项目目录下创建.husky 文件夹：
 
-![image-20221118204145337](C:\Users\hyq\AppData\Roaming\Typora\typora-user-images\image-20221118204145337.png)
+![image-20221118204145337](.\readIma\image-20221118204145337.png)
 
 3.在package.json中添加一个脚本
 
-![image-20221118204208137](C:\Users\hyq\AppData\Roaming\Typora\typora-user-images\image-20221118204208137.png)
+![image-20221118204208137](.\readIma\image-20221118204208137.png)
 
 ​		接下来，我们需要去完成一个操作，在运行commit时候，执行lint脚本。
 
-![image-20221118204313104](C:\Users\hyq\AppData\Roaming\Typora\typora-user-images\image-20221118204313104.png)
+![image-20221118204313104](.\readIma\image-20221118204313104.png)
 
-![image-20221118204333281](C:\Users\hyq\AppData\Roaming\Typora\typora-user-images\image-20221118204333281.png)
+![image-20221118204333281](.\readIma\image-20221118204333281.png)
 
 #### 6、git commit规范
 
@@ -276,7 +276,7 @@ npm install husky -D
 
   5. 在package.json中配置commit命令，执行git  cz
 
-     ![image-20221119161456431](C:\Users\hyq\AppData\Roaming\Typora\typora-user-images\image-20221119161456431.png)
+     ![image-20221119161456431](.\readIma\image-20221119161456431.png)
 
      - 第一步是选择type,本次更新的类型
 
@@ -292,7 +292,7 @@ npm install husky -D
 
   - 第六步这次改变是否影响到某个open issue
 
-  - ![image-20221119162615600](C:\Users\hyq\AppData\Roaming\Typora\typora-user-images\image-20221119162615600.png)
+  - ![image-20221119162615600](.\readIma\image-20221119162615600.png)
 
     
 
@@ -325,7 +325,7 @@ npm install husky -D
 
   - 这个时候提交的话就会报错了
 
-    ![image-20221119170013560](C:\Users\hyq\AppData\Roaming\Typora\typora-user-images\image-20221119170013560.png)
+    ![image-20221119170013560](.\readIma\image-20221119170013560.png)
 
 ### 8、vue-cl 不经过webpack打包的静态资源
 
