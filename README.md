@@ -115,9 +115,43 @@ prettirer 是一款强大的代码格式化工具，支持js、ts、css、scss�
    
    ```
 
-4. vscode 需要安装prettier的插件![image-20221118164216521](./readIma/image-20221118164216521.png)
+4. 配置.eslintignore 忽略不需要eslint检查的文件
 
-5. 测试prettier是否生效
+   ```js
+   node_modules
+   /src/node_modules
+   dist/
+   test
+   build/
+   /src/components
+   /src/wxcomponents
+   /src/unpackage
+   uni.scss
+   /src/node_modules
+   /src/api/MockModel.js
+   /src/config.js
+   /src/config.js
+   /src/static/
+   /src/common/
+   /src/lib/
+   /src/network
+   *.md
+   *.json
+   *.ttf
+   *.scss
+   *.png
+   *.jpg
+   *.html
+   .hbuilderx
+   pages.json
+   src/components/u-charts/u-charts.js
+   /src/utils/utils/js
+   /output.js  // 忽略通过命令行 vue inspect>output.js
+   ```
+
+5. vscode 需要安装prettier的插件![image-20221118164216521](./readIma/image-20221118164216521.png)
+
+6. 测试prettier是否生效
 
    - 测试一：在代码中保存代码
 
@@ -501,4 +535,59 @@ module.exports = {
   复制代码
   ```
 
-  
+  ##### 案例：新增`hot-hash-webpack-plugin`
+
+  ```js
+  const HotHashWebpackPlugin = require('hot-hash-webpack-plugin');
+  module.exports = {
+      chainWebpack: (config) => {
+          // 新增一个`hot-hash-webpack-plugin`
+          // 注意：这里use的时候不需要使用`new HotHashWebpackPlugin()`
+          config.plugin('hotHash')
+                .use(HotHashWebpackPlugin, [{ version: '1.0.0' }]);
+      }
+  }
+  复制代码
+  ```
+
+##### 2 plugins的修改
+
+同理, `plugin` 参数的修改也是通过 `tap` 去修改。
+
+```js
+config
+    .plugin(name)
+    .tap(args => newArgs)
+复制代码
+```
+
+##### 案例：修改打包后`css`抽离后的`filename`及抽离所属目录
+
+##### 案例：删除`console`和`debugger`
+
+```js
+const HotHashWebpackPlugin = require('hot-hash-webpack-plugin');
+module.exports = {
+    chainWebpack: (config) => {
+        // 修改打包时css抽离后的filename及抽离所属目录
+        config.plugin('extract-css')
+                .tap(args => [{
+                    filename: 'css/[name].[contenthash:8].css',
+                    chunkFilename: 'css/[name].[contenthash:8].css'
+                }]);
+        
+        // 正式环境下，删除console和debugger
+        config.optimization
+                .minimize(true)
+                .minimizer('terser')
+                .tap(args => {
+                    let { terserOptions } = args[0];
+                    terserOptions.compress.drop_console = true;
+                    terserOptions.compress.drop_debugger = true;
+                    return args
+                });
+    }
+}
+复制代码
+```
+
