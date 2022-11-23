@@ -5,17 +5,12 @@
     <router-link to="/login">登录</router-link>
     <router-link to="/">首页</router-link>
     <router-view></router-view>
+    <Login></Login>
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-
-export default defineComponent({
-  name: 'App',
-  components: {},
-  methods: {}
-})
+<script lang="ts" setup>
+import Login from '@/views/login/login'
 </script>
 
 <style lang="less">
