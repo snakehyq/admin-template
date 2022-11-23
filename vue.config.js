@@ -1,4 +1,4 @@
-const path = require('path')
+// const path = require('path')
 module.exports = {
   outputDir: './build',
   // 和webpack属性一致，如果configureWebpack是对象，将会最后会合并
@@ -9,6 +9,14 @@ module.exports = {
         components: '@/components'
       }
     }
+    // plugins: [
+    //   require('unplugin-vue-components/webpack')({
+    //     /* options */
+    //   }),
+    //   require('unplugin-auto-import/webpack')({
+    //     /* options */
+    //   })
+    // ]
   }
   //   configureWebpack: (config) => {
   //       config.resolve.alias = {

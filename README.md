@@ -292,4 +292,50 @@ prettirer 是一款强大的代码格式化工具，支持js、ts、css、scss�
 
     ![image-20221119170013560](C:\Users\hyq\AppData\Roaming\Typora\typora-user-images\image-20221119170013560.png)
 
-  - 
+#### 7、配置vscode的eslint和prettier
+
+setting.json中添加如下规则，那么eslint和prettier就会生效
+
+```jso
+{ 
+	"editor.formatOnSave": true, // 开启保存文件自动格式化代码
+    "editor.defaultFormatter": "esbenp.prettier-vscode", // 默认的代码格式化工具
+    "prettier.requireConfig": true, // 需要prettier的配置文件
+    "eslint.enable": true, // eslint开启
+    "editor.codeActionsOnSave": {
+       "source.fixAll.eslint": true // 代码保存使用eslint格式化
+     }
+}     
+```
+
+
+
+```json
+{
+    "less.compile": {
+        "outExt": ".wxss"
+    },
+    "files.autoSave": "off",
+    "files.associations": {
+        "*.wpy": "vue",
+        "*.vue": "html"
+    },
+    "explorer.confirmDelete": false,
+    "open-in-browser.default": "Chrome",
+    "window.zoomLevel": 0,
+    "markdown-preview-enhanced.previewTheme": "atom-light.css",
+    "[plaintext]": {
+        
+    },
+    "git.path": "D:/git/Git/cmd/git.exe",
+    "[html]": {},
+    "editor.formatOnSave": true, // 开启保存文件自动格式化代码
+    "editor.defaultFormatter": "esbenp.prettier-vscode", // 默认的代码格式化工具
+    "prettier.requireConfig": true, // 需要prettier的配置文件
+    "eslint.enable": true, // eslint开启
+    "editor.codeActionsOnSave": {
+       "source.fixAll.eslint": true // 代码保存使用eslint格式化
+     }
+}
+```
+
