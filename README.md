@@ -591,3 +591,192 @@ module.exports = {
 复制代码
 ```
 
+##### 3 plugins的删除
+
+对于一些`webpack`默认的 `plugin` ，如果不需要可以进行删除
+
+```js
+config.plugins.delete(name)
+复制代码
+```
+
+##### 案例：删除 `vue-cli3.X` 模块的自动分割抽离
+
+```js
+module.exports = {
+    chainWebpack: (config) => {
+        // vue-cli3.X 会自动进行模块分割抽离，如果不需要进行分割,可以手动删除
+        config.optimization.delete('splitChunks'); 
+        
+    }
+}
+
+复制代码
+```
+
+### 一些常见的配置
+
+##### 1、修改enter文件
+
+webpack` 默认的 `entry` 入口是 `scr/main.ts
+
+```js
+config.entryPoints.clear(); // 清空默认入口
+config.entry('test').add(getPath('./test/main.ts')); // 重新设置
+复制代码
+```
+
+##### 2、DefinePlugin
+
+定义全局全局变量，`DefinePlugin` 是 `webpack` 已经默认配置的，我们可以对参数进行修改
+
+```js
+config.plugin('define').tap(args => [{ 
+    ...args, 
+    "window.isDefine": JSON.stringify(true),
+    }]);
+复制代码
+```
+
+##### 3| 自定义filename 及 chunkFilename
+
+自定义打包后js文件的路径及文件名字
+
+```js
+config.output.filename('./js/[name].[chunkhash:8].js');
+config.output.chunkFilename('./js/[name].[chunkhash:8].js');
+复制代码
+```
+
+##### 4、修改html-webpack-plugin参数
+
+`html-webpack-plugin` 是 `webpack` 已经默认配置的，默认的源模版文件是 `public/index.html` ;我们可以对其参数进行修改
+
+```js
+ config.plugin('html')
+        .tap(options => [{
+            template: '../../index.html' // 修改源模版文件
+            title: 'test',
+        }]);
+复制代码
+```
+
+##### 5、设置别名alias
+
+`webpack`默认是将`src`的别名设置为`@`, 此外，我们可以进行添加
+
+```js
+config.resolve.alias
+        .set('@', resolve('src')) 
+        .set('api', resolve('src/apis'))
+        .set('common', resolve('src/common'))
+复制代码
+```
+
+### 附上一份我的vue.config.js的配置
+
+```js
+const path = require('path');
+const HotHashWebpackPlugin = require('hot-hash-webpack-plugin');
+const WebpackBar = require('webpackbar');
+const resolve = (dir) => path.join(__dirname, '.', dir);
+
+module.exports = {
+    productionSourceMap: false,
+    publicPath: './',
+    outputDir: 'dist',
+    assetsDir: 'assets',
+    devServer: {
+        port: 9999,
+        host: '0.0.0.0',
+        https: false,
+        open: true
+    },
+
+    chainWebpack: (config) => {
+        const types = ['vue-modules', 'vue', 'normal-modules', 'normal'];
+        types.forEach(type => {
+            let rule = config.module.rule('less').oneOf(type)
+            rule.use('style-resource')
+                .loader('style-resources-loader')
+                .options({
+                    patterns: [path.resolve(__dirname, './lessVariates.less')]
+                });
+        });
+
+        config.resolve.alias
+            .set('@', resolve('src')) 
+            .set('api', resolve('src/apis'))
+            .set('common', resolve('src/common'))
+
+        config.module.rule('images').use('url-loader')
+            .tap(options => ({
+                name: './assets/images/[name].[ext]',
+                quality: 85,
+                limit: 0,
+                esModule: false,
+            }));
+
+        config.module.rule('svg')
+            .test(/.svg$/)
+            .include.add(resolve('src/svg'))
+            .end()
+            .use('svg-sprite-loader')
+            .loader('svg-sprite-loader');
+
+        config.plugin('define').tap(args => [{
+            ...args, 
+            "window.isDefine": JSON.stringify(true)
+        }]);
+
+        // 生产环境配置
+        if (process.env.NODE_ENV === 'production') {
+            config.output.filename('./js/[name].[chunkhash:8].js');
+            config.output.chunkFilename('./js/[name].[chunkhash:8].js');
+            config.plugin('extract-css').tap(args => [{
+                filename: 'css/[name].[contenthash:8].css',
+                chunkFilename: 'css/[name].[contenthash:8].css'
+            }]);
+            config.plugin('hotHash').use(HotHashWebpackPlugin, [{ version : '1.0.0'}]);
+            config.plugin('webpackBar').use(WebpackBar);
+
+            config.optimization.minimize(true)
+                .minimizer('terser')
+                .tap(args => {
+                    let { terserOptions } = args[0];
+                    terserOptions.compress.drop_console = true;
+                    terserOptions.compress.drop_debugger = true;
+                    return args
+                });
+            config.optimization.splitChunks({
+                cacheGroups: {
+                    common: {
+                        name: 'common',
+                        chunks: 'all',
+                        minSize: 1,
+                        minChunks: 2,
+                        priority: 1
+                    },
+                    vendor: {
+                        name: 'chunk-libs',
+                        chunks: 'all',
+                        test: /[\/]node_modules[\/]/,
+                        priority: 10
+                    }
+                }
+            });
+        }
+    }
+};
+```
+
+##### 说明vue.config.js里配置
+
+##### 1、webpackBar打包进度条插件
+
+- npm install webpackbar -D
+- const WebpackBar = require('webpackbar')// 在打包的时候可以看到打包进度，可以了解一些警告和报错
+-  config.plugin('webpackBar').use(WebpackBar) // 开发环境下--配置webpackBar打包进度条插件
+
+![image-20221124163637339](C:\Users\ZM\AppData\Roaming\Typora\typora-user-images\image-20221124163637339.png)
+
