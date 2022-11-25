@@ -755,12 +755,14 @@ module.exports = {
                         chunks: 'all',
                         minSize: 1,
                         minChunks: 2,
-                        priority: 1
+                        priority: 1,
+                  // 为true时，如果当前要提取的模块，在已经在打包生成的js文件中存在，则将重用该模块，而不是把当前要提取的模块打包生成新的 js 文件。
+                  		reuseExistingChunk: true
                     },
                     vendor: {
                         name: 'chunk-libs',
                         chunks: 'all',
-                        test: /[\/]node_modules[\/]/,
+                        test: /[\\/]node_modules[\\/]/,
                         priority: 10
                     }
                 }
@@ -780,3 +782,101 @@ module.exports = {
 
 ![image-20221124163637339](C:\Users\ZM\AppData\Roaming\Typora\typora-user-images\image-20221124163637339.png)
 
+##### 2、  outputDir: process.env.outputDir || 'dist', // 'dist', 生产环境构建文件的目录
+
+##### 3、configureWebpack默认配置如下所示
+
+```js
+module.exports = {
+  configureWebpack:config =>{
+    return {
+      optimization: {
+        splitChunks: {
+          chunks: 'async',
+          minSize: 30000,
+          maxSize: 0,
+          minChunks: 1,
+          maxAsyncRequests: 6,
+          maxInitialRequests: 4,
+          automaticNameDelimiter: '~',
+          cacheGroups: {
+            vendors: {
+              name: `chunk-vendors`,
+              test: /[\\/]node_modules[\\/]/,
+              priority: -10,
+              chunks: 'initial'
+            },
+            common: {
+              name: `chunk-common`,
+              minChunks: 2,
+              priority: -20,
+              chunks: 'initial',
+              reuseExistingChunk: true
+            }
+          }
+        }
+      }
+    }
+  }
+};
+```
+
+##### 4、webpack-bundle-analyzer  可以可视化分析打包后的文件
+
+- 安装
+
+  ```js
+  npm install webpack-bundle-analyzer --save-dev
+  ```
+
+- 在 vue.config.js 中引入插件
+
+  ```js
+  const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+  chainWebpack: (config) => {
+      // 生产环境的配置
+      if (process.env.NODE_ENV === 'production') {
+          config.plugin('webpack-bundle-analyzer').use(BundleAnalyzerPlugin)
+      }
+  })
+  ```
+
+##### splitChunks
+
+- 详解 https://blog.csdn.net/ZYS10000/article/details/113144217
+- 运行**npm run build**
+
+![image-20221125153859852](.\readIma\image-20221125153859852.png)
+
+这个发现 chunk-vendors.js 的大小有点大了，有3.xxMB，还是项目初始化时需要加载的 js 文件，大小过大会导致首屏加载时间过长。
+
+**解决**：用 SplitChunks优化，例如把 element 从 chunk-vendors.js 提取出来，要在 cacheGroups 中配置：
+
+```js
+  element: {
+            name: 'element-plus',
+            chunks: 'all',
+            test: /[\\/]element-plus[\\/]/,
+            priority: 11
+          }
+```
+
+注意 priority选项，要把 element 单独提取出来，**priority 的值必须比 vendors 方案中的 priority 的值大**，不然提取不出来。
+
+![image-20221125154704992](.\readIma\image-20221125154704992.png)
+
+这个时候就可以看到element-plus被抽离出来了，
+
+![image-20221125154742622](.\readIma\image-20221125154742622.png)
+
+发现 chunk-vendors.js由3.xxMB 变成了 2MB了，此外自己可以提取第三方插件。xlsx、moment、jquery 等第三方依赖。
+
+##### 5、productionSourceMap // 生产环境的 source map,
+
+- false，打包后的不生成.map文件
+- true，打包后生成.map文件
+
+##### 6、parallel
+
+-  是否为 Babel 或 TypeScript 使用 thread-loader。该选项在系统的 CPU 有多于一个内核时自动启用，仅作用于生产构建。
+-   parallel: require("os").**cpus**().length > 1
