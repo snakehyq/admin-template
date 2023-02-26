@@ -1,5 +1,6 @@
 <template>
   <div class="login">
+    <div>xhangs</div>
     <el-button type="primary">张三</el-button>
   </div>
 </template>

@@ -50,8 +50,6 @@ module.exports = {
 
   // 通过chainWebpack方式配置
   chainWebpack: (config) => {
-    console.log(' process.env', process.env)
-    console.log(' process.env.OUT_PUT_DIR', process.env.OUT_PUT_DIR)
     // 通过style-resources-loader 来添加less全局变量
     const types = ['vue-modules', 'vue', 'normal-modules', 'normal']
     types.forEach((type) =>
@@ -120,6 +118,20 @@ module.exports = {
           }
         }
       })
+    }
+  },
+  devServer: {
+    disableHostCheck: true,
+    https: false,
+    proxy: {
+      '/api': {
+        target: 'https://mock.apifox.cn/m1/1892446-0-default',
+        changeOrigin: true,
+        secure: false
+        // pathRewrite: {
+        //   '^/api': ''
+        // }
+      }
     }
   }
 }

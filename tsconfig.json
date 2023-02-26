@@ -1,22 +1,47 @@
 {
   "compilerOptions": {
+    // 目标代码（将ts 转换成那种的js[es6/7/8]） esnext表示es6之后
     "target": "esnext",
+    // 目标代码需要使用的模块化方案（commonjs require/module.export  es module import/export） esnext表示使用es module模块化方案
     "module": "esnext",
-    "strict": true,
+    // 严格模式，严格一些的检查（比如 是否允许使用any）
+    "strict": false,
+    "noImplicitAny": false,
+    // 对jsx进行怎么样的处理，如：传换成 h 函数/转换成createElement preserve 表示保留，不做处理
+    // 如果项目中使用了babel, babel会对jsx进行处理的
     "jsx": "preserve",
+    // 辅助的导入功能 比如某些代码放入到浏览器中，是否独立生成一个文件，再导入这个文件放入到浏览器中，否则直接放入浏览器中
     "importHelpers": true,
+    // 按照什么规则去解析模块 ，一般都是使用node规则去解析模块
+    // import a from '@/api', 导入a模块，如何去解析（查找）a模块， "moduleResolution": "node", 用node规则解析
     "moduleResolution": "node",
+    // 是否跳过一些库的类型检查 （axios -> 类型/ lodash -> @type/lodasg / 其他第三方库）
+    // 设置true的好处：1.可以提高性能，去检查类型要花费很多时间，浪费性能
+    //                2.避免某些库之间的类型相同，造成冲突
+    // import { person } from 'axios'
     "skipLibCheck": true,
+    // 两个一般都是同时使用，是否允许用时使用es module 和commonJs
+    // export default/module.export = {}
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
+    // 要不要生成映射文件 （ts => js）
     "sourceMap": true,
+    // 解析文件路径时，以什么基本路径进行解析文件
+    // 如：import a from 'api/index' "baseUrl": "." ，
+    // 这时会以当前文件来解析，查找当前文件是否api/index文件，该文件下是否有a模块
     "baseUrl": ".",
+    // 指定具体要解析使用的类型 ，如不写，以"target": "esnext",为准，
+    // 如 target: "es5" 那么就可以使用es5的所有类型
+    // 这里使用webpack中自带的env的类型
     "types": ["webpack-env"],
+    // 路径解析
     "paths": {
       "@/*": ["src/*"]
     },
+    // 在项目中使用什么类型，直接加就行，如果我想使用dom类型，就加dom
     "lib": ["esnext", "dom", "dom.iterable", "scripthost"]
   },
+  // 那些ts文件需要被解析
   "include": [
     "src/**/*.ts",
     "src/**/*.tsx",
@@ -24,5 +49,6 @@
     "tests/**/*.ts",
     "tests/**/*.tsx"
   ],
+  // 那些ts文件不需要被解析
   "exclude": ["node_modules"]
 }

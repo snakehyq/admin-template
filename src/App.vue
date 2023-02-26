@@ -10,8 +10,13 @@
 </template>
 
 <script lang="ts" setup>
+import { onMounted } from 'vue'
 import Login from '@/views/login/login'
-console.log('12123123')
+import { getAppDetail } from '@/api/app'
+onMounted(async () => {
+  const data = await getAppDetail()
+  console.log('请求数据', data)
+})
 </script>
 
 <style lang="less">
