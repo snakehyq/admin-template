@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from 'axios'
+import axios from 'axios'
 import type { AxiosInstance } from 'axios'
 import { IRequestInterceptors, IEXtendsAxiosRequestConfig } from './type'
 import { httpRequestInterceptors } from './global'
@@ -25,10 +25,10 @@ class HttpRequest {
     // 全局的拦截器
     httpRequestInterceptors(this)
   }
-  request<T>(config: IEXtendsAxiosRequestConfig): Promise<T> {
+  request<T>(config: IEXtendsAxiosRequestConfig<T>): Promise<T> {
     // 封装请求独有的拦截器
     if (config.interceptors?.requestInterceptor) {
-      config = config.interceptors.requestInterceptor(config)
+      config = config.interceptors.requestInterceptor(config as any)
     }
     // 封装请求独有的加载图标
     if (config.showLoading === false) {
@@ -57,25 +57,25 @@ class HttpRequest {
         })
     })
   }
-  get<T>(config: IEXtendsAxiosRequestConfig): Promise<T> {
+  get<T>(config: IEXtendsAxiosRequestConfig<T>): Promise<T> {
     return this.request({
       method: 'GET',
       ...config
     })
   }
-  post<T>(config: IEXtendsAxiosRequestConfig): Promise<T> {
+  post<T>(config: IEXtendsAxiosRequestConfig<T>): Promise<T> {
     return this.request({
       method: 'POST',
       ...config
     })
   }
-  delete<T>(config: IEXtendsAxiosRequestConfig): Promise<T> {
+  delete<T>(config: IEXtendsAxiosRequestConfig<T>): Promise<T> {
     return this.request({
       method: 'DELETE',
       ...config
     })
   }
-  patch<T>(config: IEXtendsAxiosRequestConfig): Promise<T> {
+  patch<T>(config: IEXtendsAxiosRequestConfig<T>): Promise<T> {
     return this.request({
       method: 'PATCH',
       ...config

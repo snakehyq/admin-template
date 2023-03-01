@@ -1,13 +1,13 @@
-import type { AxiosRequestConfig, AxiosResponse } from 'axios'
+import type { AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
 
-export interface IRequestInterceptors {
-  requestInterceptor?: (config: AxiosRequestConfig) => AxiosRequestConfig
+export interface IRequestInterceptors<T = AxiosResponse> {
+  requestInterceptor?: (config: InternalAxiosRequestConfig) => InternalAxiosRequestConfig
   requestInterceptorCatch?: (error: any) => any
-  responseInterceptor?: (config: any) => any
+  responseInterceptor?: (config: T) => T
   responseInterceptorCatch?: (error: any) => any
 }
 
-export interface IEXtendsAxiosRequestConfig extends AxiosRequestConfig {
-  interceptors?: IRequestInterceptors
+export interface IEXtendsAxiosRequestConfig<T = AxiosResponse> extends AxiosRequestConfig {
+  interceptors?: IRequestInterceptors<T>
   showLoading?: boolean
 }
