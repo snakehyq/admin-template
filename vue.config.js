@@ -50,6 +50,9 @@ module.exports = {
 
   // 通过chainWebpack方式配置
   chainWebpack: (config) => {
+    config.resolve.alias
+      .set('@', path.resolve(__dirname, 'src'))
+      .set('components', '@/components')
     // 通过style-resources-loader 来添加less全局变量
     const types = ['vue-modules', 'vue', 'normal-modules', 'normal']
     types.forEach((type) =>
