@@ -26,6 +26,8 @@ import { reactive, ref } from 'vue'
 import { rules } from '../config/loginAccount'
 import type { FormInstance, FormRules } from 'element-plus'
 import storage from '@/utls/storage'
+import { useStore } from 'vuex'
+const store = useStore()
 const ruleFormRef = ref<FormInstance>()
 const ruleForm = reactive({
   name: storage.getStorage('name') || '',
@@ -43,6 +45,8 @@ const submitForm = async (isKeyPassword: boolean) => {
         storage.deleteStorage('name')
         storage.deleteStorage('password')
       }
+      // 将密码、用户名添加到vuex中
+      store.dispatch('loginModule/accountLoginAction', { ...ruleForm })
     } else {
       console.log('error submit!', fields)
     }

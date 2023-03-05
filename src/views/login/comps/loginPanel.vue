@@ -37,6 +37,7 @@ const isKeyPassword = ref(true)
 const accountRef = ref<InstanceType<typeof loginAccount>>()
 const phoneRef = ref<InstanceType<typeof loginPhone>>()
 let tabIndex = 0
+
 const tabClick = (tab: TabsPaneContext, event: Event) => {
   tabIndex = Number(tab.index)
   tabIndex
@@ -47,7 +48,6 @@ const login = () => {
   tabIndex
     ? phoneRef.value?.submitForm()
     : accountRef.value?.submitForm(isKeyPassword.value)
-  console.log('登录')
 }
 </script>
 
