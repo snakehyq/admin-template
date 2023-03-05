@@ -44,7 +44,9 @@ const tabClick = (tab: TabsPaneContext, event: Event) => {
     : phoneRef.value?.clearValidateForm()
 }
 const login = () => {
-  tabIndex ? phoneRef.value?.submitForm() : accountRef.value?.submitForm()
+  tabIndex
+    ? phoneRef.value?.submitForm()
+    : accountRef.value?.submitForm(isKeyPassword.value)
   console.log('登录')
 }
 </script>

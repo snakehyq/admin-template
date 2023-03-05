@@ -11,7 +11,11 @@
         <el-input v-model="ruleForm.name" />
       </el-form-item>
       <el-form-item label="密码" prop="password">
-        <el-input v-model="ruleForm.password" />
+        <el-input
+          v-model="ruleForm.password"
+          type="password"
+          autocomplete="off"
+        />
       </el-form-item>
     </el-form>
   </div>
@@ -21,17 +25,24 @@
 import { reactive, ref } from 'vue'
 import { rules } from '../config/loginAccount'
 import type { FormInstance, FormRules } from 'element-plus'
-
+import storage from '@/utls/storage'
 const ruleFormRef = ref<FormInstance>()
 const ruleForm = reactive({
-  name: '',
-  password: ''
+  name: storage.getStorage('name') || '',
+  password: storage.getStorage('password') || ''
 })
 
-const submitForm = async () => {
+const submitForm = async (isKeyPassword: boolean) => {
   await ruleFormRef.value.validate((valid, fields) => {
     if (valid) {
-      console.log('submit!')
+      // 记住密码
+      if (isKeyPassword) {
+        storage.setStorage('name', ruleForm.name)
+        storage.setStorage('password', ruleForm.password)
+      } else {
+        storage.deleteStorage('name')
+        storage.deleteStorage('password')
+      }
     } else {
       console.log('error submit!', fields)
     }
