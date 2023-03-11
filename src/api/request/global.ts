@@ -32,6 +32,7 @@ export function httpRequestInterceptors(httpRequeest: any) {
   httpRequeest.instance.interceptors.response.use(
     (response) => {
       console.log('全局响应拦截器- 成功', response)
+
       // 隐藏加载小图标
       httpRequeest.loading.close()
       if (response.status !== 200) {

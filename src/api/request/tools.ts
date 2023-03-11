@@ -5,7 +5,9 @@ export const handleRequestHeader = (config) => {
 }
 
 export const handleAuth = (config) => {
-  config.headers['token'] = localStorage.getItem('token') || ''
+  config.headers['token'] = localStorage.getItem('tokens') || ''
+  console.log(config.headers)
+
   return config
 }
 export const handleNetworkError = (errStatus) => {

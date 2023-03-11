@@ -16,6 +16,7 @@ const handleLessGlobalType = (rule) => {
       patterns: [resolve('./src/lessVariates.less')]
     })
 }
+console.log('process', process.env.VUE_APP_API_BASE_URL)
 module.exports = {
   outputDir: './build', // 'build', 生产环境构建文件的目录
   assetsDir: 'assets',
@@ -128,12 +129,12 @@ module.exports = {
     https: false,
     proxy: {
       '/api': {
-        target: 'https://mock.apifox.cn/m1/1892446-0-default',
+        target: 'https://mock.apifox.cn/m1/2399406-0-default',
         changeOrigin: true,
-        secure: false
-        // pathRewrite: {
-        //   '^/api': ''
-        // }
+        secure: false,
+        pathRewrite: {
+          '^/api': ''
+        }
       }
     }
   }

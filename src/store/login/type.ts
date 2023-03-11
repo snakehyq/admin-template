@@ -1,4 +1,7 @@
+import { IUserInfo } from '@/api/login/type'
+
 export interface ILoginState {
-  token: string
-  userInfo: any
+  tokens: string
+  userInfo: IUserInfo
+  roleMenus: any
 }
