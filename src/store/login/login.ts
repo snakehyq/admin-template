@@ -1,5 +1,4 @@
 import { Module } from 'vuex'
-
 import { ILoginState } from './type'
 import { IRoutState } from '../type'
 import { login, queryUser, roleMenusById } from '@/api/login/login'

@@ -1,5 +1,6 @@
 import { baseHttpRequest } from '../'
-import { IDataType, IUserInfo, IUserLogin, IUserType } from './type'
+import { IUserInfo, IUserLogin, IUserType } from './type'
+import { IDataType } from '../type'
 
 // 用户登录
 export function login(data: IUserLogin) {
