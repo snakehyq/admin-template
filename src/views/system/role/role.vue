@@ -6,7 +6,7 @@
         v-model="searchFormData"
         @search="search"
       />
-      <page-content v-bind="contentConfig" page-name="/user"> </page-content>
+      <page-content v-bind="contentConfig" page-name="/role"> </page-content>
     </el-card>
   </div>
 </template>

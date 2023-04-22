@@ -61,6 +61,15 @@ export const menus = [
         type: 2,
         children: null,
         parentId: 41
+      },
+      {
+        id: 55,
+        url: '/main/system/role',
+        name: '角色管理',
+        sort: 8,
+        type: 2,
+        children: null,
+        parentId: 41
       }
     ]
   },

@@ -15,6 +15,11 @@ const routes: RouteRecordRaw[] = [
         path: '/main/system/user',
         name: 'user',
         component: () => import('@/views/system/user/user.vue')
+      },
+      {
+        path: '/main/system/role',
+        name: 'role',
+        component: () => import('@/views/system/role/role.vue')
       }
     ]
   },
@@ -58,8 +63,6 @@ router.beforeEach((to, from, next) => {
   console.log(58, token)
 
   if (!token) {
-    console.log(123)
-
     // 提示登录过期,请重新登录
     ElMessage.error('登录过期,请重新登录!')
     storage.deleteStorage('tokens')

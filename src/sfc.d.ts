@@ -5,3 +5,6 @@ declare module '*.vue' {
   const component: DefineComponent<{}, {}, any>
   export default component
 }
+
+// 声明element-ui 的中文
+declare module 'element-plus/dist/locale/zh-cn.mjs'

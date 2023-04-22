@@ -8,7 +8,16 @@ const systemModule: Module<ISystemStore, IRoutState> = {
   state() {
     return {
       userList: [],
-      userCount: 0
+      userCount: 0,
+      roleList: [],
+      roleCount: 0
+    }
+  },
+  getters: {
+    pageListData(state) {
+      return (pageName: string) => {
+        return state[`${pageName.slice(1)}List`]
+      }
     }
   },
   mutations: {
@@ -17,14 +26,36 @@ const systemModule: Module<ISystemStore, IRoutState> = {
     },
     changeUserAccount(state, data) {
       state.userCount = data
+    },
+    changeRoleList(state, data) {
+      state.roleList = data
+    },
+    changeRoleAccount(state, data) {
+      state.roleCount = data
     }
   },
   actions: {
     async getPageList({ commit }, payLoad: any) {
-      const data = await pageList(payLoad.url, payLoad.data)
+      // 1.获取url
+      const pageName = payLoad.pageName
+      const pageUrl = `${pageName}/list`
+      // 2.发送请求
+      const data = await pageList(pageUrl, payLoad.data)
       if (data.code == 200) {
-        commit('changeUserList', data.data.result)
-        commit('changeUserAccount', data.data.total)
+        commit(
+          'change' +
+            pageName.slice(1, 2).toUpperCase() +
+            pageName.slice(2).toLowerCase() +
+            'List',
+          data.data.result
+        )
+        commit(
+          'change' +
+            pageName.slice(1, 2).toUpperCase() +
+            pageName.slice(2).toLowerCase() +
+            'Account',
+          data.data.total
+        )
       }
     }
   }
