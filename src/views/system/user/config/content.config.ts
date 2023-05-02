@@ -1,4 +1,5 @@
 export const contentConfig = {
+  pageName: '/user',
   title: '用户列表',
   showIndexColumn: true,
   showSelectColumn: true,

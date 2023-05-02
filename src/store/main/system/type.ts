@@ -3,4 +3,6 @@ export interface ISystemStore {
   userCount: number
   roleList: any[]
   roleCount: number
+  menuList: any[]
+  menuCount: number
 }

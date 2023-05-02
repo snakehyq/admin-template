@@ -1,22 +1,24 @@
 <template>
   <div class="pageContent">
     <page-table
-      :title="title"
+      :dataSourse="dataSourse"
+      v-bind="contentConfig"
+      :page-total="pageTotal"
+      v-model:page="pageLoad"
+    >
+      <!-- :title="title"
       :showIndexColumn="showIndexColumn"
       :showSelectColumn="showSelectColumn"
-      :dataSourse="dataSourse"
-      :propList="propList"
-    >
+      :propList="propList" -->
       <template #operation>
-        <el-button type="primary">新增</el-button>
-        <el-button plain>导出</el-button>
+        <slot name="operation"></slot>
       </template>
-      <template #enable="scoped">
-        {{ scoped.row.enable ? '启用' : '禁用' }}
-      </template>
-      <template #action>
-        <el-button type="primary" plain text>编辑</el-button>
-        <el-button type="danger" plain text>删除</el-button>
+      <template
+        v-for="item in propSlots"
+        :key="item.prop + 'slot-name'"
+        #[item.slotName]="scoped"
+      >
+        <slot :name="item.slotName" :row="scoped.row"></slot>
       </template>
     </page-table>
   </div>
@@ -24,42 +26,59 @@
 
 <script setup lang="ts">
 import { pageTable } from '@/base-ui/pageTable/'
-
-import { onMounted, computed } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useStore } from 'vuex'
 const store = useStore()
-onMounted(() => {
-  store.dispatch('systemModule/getPageList', {
-    pageName: props.pageName,
-    data: {
-      pageSize: 10,
-      pageNo: 1
-    }
-  })
+const pageLoad = ref({
+  pageSize: 10,
+  pageNo: 1
 })
 
+watch(pageLoad, (newVal) => {
+  getPageContentList()
+})
+const getPageContentList = (queryInfo: any = {}) => {
+  store.dispatch('systemModule/getPageList', {
+    pageName: props.contentConfig.pageName,
+    data: {
+      ...pageLoad.value,
+      ...queryInfo
+    }
+  })
+}
+getPageContentList()
 const dataSourse = computed(() => {
-  console.log(store.getters['systemModule/pageListData'](props.pageName))
-  return store.getters['systemModule/pageListData'](props.pageName)
+  return store.getters['systemModule/pageListData'](
+    props.contentConfig.pageName
+  )
+})
+console.log('dataSourse', dataSourse)
+
+const pageTotal = computed(() => {
+  return store.getters['systemModule/pageCountData'](
+    props.contentConfig.pageName
+  )
 })
 const props = defineProps({
-  propList: {
-    typeof: Array,
-    default: () => []
-  },
-  showIndexColumn: Boolean,
-  showSelectColumn: Boolean,
-  title: String,
-  pageName: {
-    typeof: String,
+  contentConfig: {
+    typeof: Object,
     require: true
   }
 })
-const emit = defineEmits([' '])
+console.log(74, props)
+
+// 动态插槽，跨组件插槽的使用
+// 获取到配置中propList中的所有插槽
+const propSlots = props.contentConfig.propList.filter((item) => item.slotName)
+
+const emit = defineEmits(['selectionChange'])
 const handeleSelectionChange = (value) => {
   console.log(value)
   emit('selectionChange', value)
 }
+defineExpose({
+  getPageContentList
+})
 </script>
 <style scoped lang="less">
 .header {

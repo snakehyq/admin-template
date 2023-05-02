@@ -81,7 +81,7 @@ prettirer 是一款强大的代码格式化工具，支持 js、ts、css、scss�
 
 1. 安装 prettier
 
-​ `npm install prettier -D`
+ `npm install prettier -D`
 
 2. 配置.prettierrc 文件
 
@@ -187,7 +187,7 @@ prettirer 是一款强大的代码格式化工具，支持 js、ts、css、scss�
        '@vue/prettier/@typescript-eslint',
        'plugin:prettier/recommended'
      ],
-
+   
    module.exports = {
      root: true,
      env: {
@@ -258,7 +258,7 @@ npm install husky -D
 
 ![image-20221118204208137](.\readIma\image-20221118204208137.png)
 
-​ 接下来，我们需要去完成一个操作，在运行 commit 时候，执行 lint 脚本。
+ 接下来，我们需要去完成一个操作，在运行 commit 时候，执行 lint 脚本。
 
 ![image-20221118204313104](.\readIma\image-20221118204313104.png)
 
@@ -266,7 +266,7 @@ npm install husky -D
 
 #### 6、git commit 规范
 
-​ 通常我们的 git commit 会按照统一的风格来提交，这样可以快速定位提交的内容，方便之后对版本进行控制。但是如果每次手动来编写这些是比较麻烦的事情，我们可以使用一个 工具：commitizen
+ 通常我们的 git commit 会按照统一的风格来提交，这样可以快速定位提交的内容，方便之后对版本进行控制。但是如果每次手动来编写这些是比较麻烦的事情，我们可以使用一个 工具：commitizen
 
 - commitizen 是一个帮助我们去规范 commit message 的工具：
 
@@ -900,3 +900,76 @@ module.exports = {
 
 - 是否为 Babel 或 TypeScript 使用 thread-loader。该选项在系统的 CPU 有多于一个内核时自动启用，仅作用于生产构建。
 - parallel: require("os").**cpus**().length > 1
+
+
+
+
+
+
+
+### 难点
+
+描述：跨组件插槽如何使用 ？有a、b、c三个组件，a是爷爷组件，b是父组件，c是孙子组件，把a的组件的插槽放入到c组件中使用，应该如何解决？
+
+解决：a中使用插槽内容，b中使用slot作用域插槽接受a中的插槽内容，同时使用作为b中的插槽内容，然后在c中使用slot作用域操作接受b中的插槽内容
+
+a组件中使用b组件：
+
+```js
+<page-content
+        ref="pageContentRef"
+        v-bind="contentConfig"
+        page-name="/user"
+      >
+            // 插槽内容
+        <template #enable="scoped">
+          {{ scoped.row.enable ? '启用' : '禁用' }}
+        </template>
+        <template #action>
+          <el-button type="primary" plain text>编辑</el-button>
+          <el-button type="danger" plain text>删除</el-button>
+        </template>
+      </page-content>
+```
+
+b组件接受a组件的内容，同时使用c组件
+
+```js
+ <page-table
+      :title="title"
+      :showIndexColumn="showIndexColumn"
+      :showSelectColumn="showSelectColumn"
+      :dataSourse="dataSourse"
+      :propList="propList"
+      :page-total="pageTotal"
+      v-model:page="pageLoad"
+    >
+		// 使用template 作为插槽内容，将放入到c中的slot作用域插槽
+      <template
+        v-for="item in propSlots"
+        :key="item.prop + 'slot-name'"
+        #[item.slotName]="scoped"
+      >
+            // slot作用域插槽接受好a组件的内容
+        <slot :name="item.slotName" :row="scoped.row"></slot>
+      </template>
+    </page-table>
+```
+
+c组件接受b组件的插槽内容
+
+```js
+<el-table :data="dataSourse" @selection-change="handeleSelectionChange">
+      <template v-for="propItem in propList" :key="propItem.prop">
+        <el-table-column v-bind="propItem" align="center">
+            //使用slot接受b组件传过来的内容
+          <template #default="scope">
+            <slot :name="propItem.slotName" :row="scope.row">
+              {{ scope.row[propItem.prop] }}
+            </slot>
+          </template>
+        </el-table-column>
+      </template>
+    </el-table>
+```
+

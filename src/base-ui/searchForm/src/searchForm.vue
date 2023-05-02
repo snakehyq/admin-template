@@ -39,10 +39,11 @@ watch(
   }
 )
 const onSubmit = () => {
-  emit('search')
+  emit('search', formData.value)
 }
 const resetForm = () => {
   searchFormRef.value.formRef.resetFields()
+  emit('reset', formData.value)
 }
 </script>
 

@@ -1,4 +1,5 @@
 export const contentConfig = {
+  pageName: '/role',
   title: '角色列表',
   showIndexColumn: true,
   showSelectColumn: true,

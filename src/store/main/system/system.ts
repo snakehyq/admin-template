@@ -10,13 +10,20 @@ const systemModule: Module<ISystemStore, IRoutState> = {
       userList: [],
       userCount: 0,
       roleList: [],
-      roleCount: 0
+      roleCount: 0,
+      menuList: [],
+      menuCount: 0
     }
   },
   getters: {
     pageListData(state) {
       return (pageName: string) => {
         return state[`${pageName.slice(1)}List`]
+      }
+    },
+    pageCountData(state) {
+      return (pageName: string) => {
+        return state[`${pageName.slice(1)}Count`]
       }
     }
   },
@@ -32,6 +39,12 @@ const systemModule: Module<ISystemStore, IRoutState> = {
     },
     changeRoleAccount(state, data) {
       state.roleCount = data
+    },
+    changeMenuList(state, data) {
+      state.menuList = data
+    },
+    changeMenuAccount(state, data) {
+      state.menuCount = data
     }
   },
   actions: {
@@ -47,7 +60,7 @@ const systemModule: Module<ISystemStore, IRoutState> = {
             pageName.slice(1, 2).toUpperCase() +
             pageName.slice(2).toLowerCase() +
             'List',
-          data.data.result
+          data.data.result || data.data
         )
         commit(
           'change' +

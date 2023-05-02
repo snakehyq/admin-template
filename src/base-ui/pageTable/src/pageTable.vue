@@ -8,7 +8,11 @@
         </slot>
       </div>
     </div>
-    <el-table :data="dataSourse" @selection-change="handeleSelectionChange">
+    <el-table
+      :data="dataSourse"
+      @selection-change="handeleSelectionChange"
+      v-bind="childrenProps"
+    >
       <el-table-column
         v-if="showSelectColumn"
         type="selection"
@@ -34,16 +38,16 @@
         </el-table-column>
       </template>
     </el-table>
-    <div class="footer">
+    <div class="footer" v-show="showFooter">
       <slot name="footer">
         <el-pagination
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
-          :current-page="currentPage"
+          :current-page="page.pageNo"
           :page-sizes="[5, 10, 15, 20]"
-          :page-size="5"
+          :page-size="page.pageSize"
           layout="total,sizes,prev,pager,next,jumper"
-          :total="400"
+          :total="pageTotal"
         >
         </el-pagination>
       </slot>
@@ -61,14 +65,40 @@ const props = defineProps({
     typeof: Array,
     default: () => []
   },
+  pageTotal: {
+    typeof: Number,
+    default: 0
+  },
+  page: {
+    typeof: Object,
+    default: () => ({
+      pageSize: 10,
+      pageNo: 1
+    })
+  },
   showIndexColumn: Boolean,
   showSelectColumn: Boolean,
+  showFooter: {
+    typeof: Boolean,
+    default: true
+  },
+  childrenProps: {
+    typeof: Object,
+    default: () => ({})
+  },
   title: String
 })
-const emit = defineEmits(['selectionChange'])
+const emit = defineEmits(['selectionChange', 'update:page'])
 const handeleSelectionChange = (value) => {
   console.log(value)
   emit('selectionChange', value)
+}
+const handleSizeChange = (pageSize) => {
+  emit('update:page', { ...props.page, pageSize })
+}
+
+const handleCurrentChange = (pageNo) => {
+  emit('update:page', { ...props.page, pageNo })
 }
 </script>
 <style scoped lang="less">
